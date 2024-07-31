@@ -142,7 +142,7 @@ public class ModelGeckoBiped extends NxAnimatedGeoModel<GeckoPlayer> {
 			leftArmClassic.setHidden(false);
 		}
 		
-		this.swimAnimation = entityIn.getSwimAmount(partialTick); //todo this
+		this.swimAnimation = entityIn.getSwimAmount(partialTick);
 
 		float headLookAmount = getControllerValue("HeadLookController");
 		float armLookAmount = 1f - getControllerValue("ArmPitchController");

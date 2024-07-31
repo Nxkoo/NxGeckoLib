@@ -1,6 +1,7 @@
 package com.github.nxkoo.nxgeckolib;
 
 import com.github.nxkoo.nxgeckolib.core.client.model.tools.NxGeoBuilder;
+import com.github.nxkoo.nxgeckolib.core.server.ability.AbilityCommonEventHandler;
 import com.github.nxkoo.nxgeckolib.core.server.capability.CapabilityHandler;
 import com.github.nxkoo.nxgeckolib.proxy.ClientProxy;
 import com.github.nxkoo.nxgeckolib.proxy.CommonProxy;
@@ -48,6 +49,7 @@ public class NxGeckoLib {
 
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new ServerEventHandler());
+        MinecraftForge.EVENT_BUS.register(new AbilityCommonEventHandler());
     }
 
     private void setup(final FMLCommonSetupEvent event) {

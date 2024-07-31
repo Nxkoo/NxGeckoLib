@@ -12,70 +12,72 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ModelGeckoPlayerFirstPerson extends NxAnimatedGeoModel<GeckoPlayer> {
-	
-	private ResourceLocation animationFileLocation;
-	private ResourceLocation modelLocation;
-	private ResourceLocation textureLocation;
 
-	public BipedModel.ArmPose leftArmPose = BipedModel.ArmPose.EMPTY;
-	public BipedModel.ArmPose rightArmPose = BipedModel.ArmPose.EMPTY;
+    private ResourceLocation animationFileLocation;
+    private ResourceLocation modelLocation;
+    private ResourceLocation textureLocation;
 
-	protected boolean useSmallArms;
-	
-	@Override
-	public ResourceLocation getAnimationFileLocation(GeckoPlayer animatable) {
-		return animationFileLocation;
-	}
+    public BipedModel.ArmPose leftArmPose = BipedModel.ArmPose.EMPTY;
+    public BipedModel.ArmPose rightArmPose = BipedModel.ArmPose.EMPTY;
 
-	@Override
-	public ResourceLocation getModelLocation(GeckoPlayer animatable) {
-		return modelLocation;
-	}
+    protected boolean useSmallArms;
 
-	@Override
-	public ResourceLocation getTextureLocation(GeckoPlayer animatable) {
-		return textureLocation;
-	}
+    @Override
+    public ResourceLocation getAnimationFileLocation(GeckoPlayer animatable) {
+        return animationFileLocation;
+    }
 
-	public void setUseSmallArms(boolean useSmallArms) {
-		this.useSmallArms = useSmallArms;
-	}
+    @Override
+    public ResourceLocation getModelLocation(GeckoPlayer animatable) {
+        return modelLocation;
+    }
 
-	public boolean isUsingSmallArms() {
-		return useSmallArms;
-	}
+    @Override
+    public ResourceLocation getTextureLocation(GeckoPlayer animatable) {
+        return textureLocation;
+    }
 
-	@Override
-	public void setLivingAnimations(GeckoPlayer entity, Integer uniqueID) {
-		super.setLivingAnimations(entity, uniqueID);
-		if (isInitialized()) {
-			NxGeoBone rightArmLayerClassic = getNxBone("RightArmLayerClassic");
-			NxGeoBone leftArmLayerClassic = getNxBone("LeftArmLayerClassic");
-			NxGeoBone rightArmLayerSlim = getNxBone("RightArmLayerSlim");
-			NxGeoBone leftArmLayerSlim = getNxBone("LeftArmLayerSlim");
-			NxGeoBone rightArmClassic = getNxBone("RightArmClassic");
-			NxGeoBone leftArmClassic = getNxBone("LeftArmClassic");
-			NxGeoBone rightArmSlim = getNxBone("RightArmSlim");
-			NxGeoBone leftArmSlim = getNxBone("LeftArmSlim");
-			getNxBone("LeftHeldItem").setHidden(true);
-			getNxBone("RightHeldItem").setHidden(true);
-			rightArmClassic.setHidden(true);
-			leftArmClassic.setHidden(true);
-			rightArmLayerClassic.setHidden(true);
-			leftArmLayerClassic.setHidden(true);
-			rightArmSlim.setHidden(true);
-			leftArmSlim.setHidden(true);
-			rightArmLayerSlim.setHidden(true);
-			leftArmLayerSlim.setHidden(true);
-		}
-	}
+    public void setUseSmallArms(boolean useSmallArms) {
+        this.useSmallArms = useSmallArms;
+    }
 
-	/** Check if the modelId has some ResourceLocation **/
-	@Override
-	public boolean resourceForModelId(AbstractClientPlayerEntity player) {
-		this.animationFileLocation = new ResourceLocation(NxGeckoLib.MODID, "animations/animated_player_first_person.animation.json");
-		this.modelLocation = new ResourceLocation(NxGeckoLib.MODID, "geo/animated_player_first_person.geo.json");
-		this.textureLocation = player.getSkinTextureLocation();
-		return true;
-	}
+    public boolean isUsingSmallArms() {
+        return useSmallArms;
+    }
+
+    @Override
+    public void setLivingAnimations(GeckoPlayer entity, Integer uniqueID) {
+        super.setLivingAnimations(entity, uniqueID);
+        if (isInitialized()) {
+            NxGeoBone rightArmLayerClassic = getNxBone("RightArmLayerClassic");
+            NxGeoBone leftArmLayerClassic = getNxBone("LeftArmLayerClassic");
+            NxGeoBone rightArmLayerSlim = getNxBone("RightArmLayerSlim");
+            NxGeoBone leftArmLayerSlim = getNxBone("LeftArmLayerSlim");
+            NxGeoBone rightArmClassic = getNxBone("RightArmClassic");
+            NxGeoBone leftArmClassic = getNxBone("LeftArmClassic");
+            NxGeoBone rightArmSlim = getNxBone("RightArmSlim");
+            NxGeoBone leftArmSlim = getNxBone("LeftArmSlim");
+            getNxBone("LeftHeldItem").setHidden(true);
+            getNxBone("RightHeldItem").setHidden(true);
+            rightArmClassic.setHidden(true);
+            leftArmClassic.setHidden(true);
+            rightArmLayerClassic.setHidden(true);
+            leftArmLayerClassic.setHidden(true);
+            rightArmSlim.setHidden(true);
+            leftArmSlim.setHidden(true);
+            rightArmLayerSlim.setHidden(true);
+            leftArmLayerSlim.setHidden(true);
+        }
+    }
+
+    /**
+     * Check if the modelId has some ResourceLocation
+     **/
+    @Override
+    public boolean resourceForModelId(AbstractClientPlayerEntity player) {
+        this.animationFileLocation = new ResourceLocation(NxGeckoLib.MODID, "animations/animated_player_first_person.animation.json");
+        this.modelLocation = new ResourceLocation(NxGeckoLib.MODID, "geo/animated_player_first_person.geo.json");
+        this.textureLocation = player.getSkinTextureLocation();
+        return true;
+    }
 }

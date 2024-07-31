@@ -32,18 +32,6 @@ public class PlayerCapability {
 
         void setVerticalSwing(boolean verticalSwing);
 
-        int getUntilSunstrike();
-
-        void setUntilSunstrike(int untilSunstrike);
-
-        int getUntilAxeSwing();
-
-        void setUntilAxeSwing(int untilAxeSwing);
-
-        void setAxeCanAttack(boolean axeCanAttack);
-
-        boolean getAxeCanAttack();
-
         boolean isMouseRightDown();
 
         void setMouseRightDown(boolean mouseRightDown);
@@ -58,10 +46,6 @@ public class PlayerCapability {
 
         Vector3d getPrevMotion();
 
-        void setUsingSolarBeam(boolean b);
-
-        boolean getUsingSolarBeam();
-
         float getPrevCooledAttackStrength();
 
         void setPrevCooledAttackStrength(float cooledAttackStrength);
@@ -72,8 +56,6 @@ public class PlayerCapability {
 
     public static class PlayerCapabilityImp implements IPlayerCapability {
         public boolean verticalSwing = false;
-        public int untilSunstrike = 0;
-        public int untilAxeSwing = 0;
         private int prevTime;
         private int time;
         public boolean mouseRightDown = false;
@@ -90,30 +72,6 @@ public class PlayerCapability {
 
         public void setVerticalSwing(boolean verticalSwing) {
             this.verticalSwing = verticalSwing;
-        }
-
-        public int getUntilSunstrike() {
-            return untilSunstrike;
-        }
-
-        public void setUntilSunstrike(int untilSunstrike) {
-            this.untilSunstrike = untilSunstrike;
-        }
-
-        public int getUntilAxeSwing() {
-            return untilAxeSwing;
-        }
-
-        public void setUntilAxeSwing(int untilAxeSwing) {
-            this.untilAxeSwing = untilAxeSwing;
-        }
-
-        public void setAxeCanAttack(boolean axeCanAttack) {
-            this.axeCanAttack = axeCanAttack;
-        }
-
-        public boolean getAxeCanAttack() {
-            return axeCanAttack;
         }
 
         public boolean isMouseRightDown() {
@@ -144,10 +102,6 @@ public class PlayerCapability {
             return prevMotion;
         }
 
-        public void setUsingSolarBeam(boolean b) { this.usingSolarBeam = b; }
-
-        public boolean getUsingSolarBeam() { return this.usingSolarBeam; }
-
         @Override
         public float getPrevCooledAttackStrength() {
             return prevCooledAttackStrength;
@@ -162,10 +116,6 @@ public class PlayerCapability {
         public GeckoPlayer.GeckoPlayerThirdPerson getGeckoPlayer() {
             return geckoPlayer;
         }
-
-        private boolean usingSolarBeam;
-
-        public boolean axeCanAttack;
 
         public Vector3d prevMotion;
 
@@ -183,12 +133,6 @@ public class PlayerCapability {
 
             prevMotion = player.position().subtract(new Vector3d(player.xo, player.yo, player.zo));
             prevTime = time;
-            if (untilSunstrike > 0) {
-                untilSunstrike--;
-            }
-            if (untilAxeSwing > 0) {
-                untilAxeSwing--;
-            }
         }
 
 
@@ -203,8 +147,6 @@ public class PlayerCapability {
         @Override
         public INBT writeNBT() {
             CompoundNBT compound = new CompoundNBT();
-            compound.putInt("untilSunstrike", untilSunstrike);
-            compound.putInt("untilAxeSwing", untilAxeSwing);
             compound.putInt("prevTime", prevTime);
             compound.putInt("time", time);
             return compound;
@@ -213,8 +155,6 @@ public class PlayerCapability {
         @Override
         public void readNBT(INBT nbt) {
             CompoundNBT compound = (CompoundNBT) nbt;
-            untilSunstrike = compound.getInt("untilSunstrike");
-            untilAxeSwing = compound.getInt("untilAxeSwing");
             prevTime = compound.getInt("prevTime");
             time = compound.getInt("time");
         }

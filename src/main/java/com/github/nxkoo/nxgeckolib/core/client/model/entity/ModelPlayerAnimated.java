@@ -18,12 +18,6 @@ import java.util.Random;
 public class ModelPlayerAnimated<T extends LivingEntity> extends PlayerModel<T> {
     private final List<ModelRenderer> modelRenderers = Lists.newArrayList();
 
-    public ModelRenderer nxJacket = this.jacket;
-    public ModelRenderer nxLeftSleeve = this.leftSleeve;
-    public ModelRenderer nxRightSleeve = this.rightSleeve;
-    public ModelRenderer nxLeftPants = this.leftPants;
-    public ModelRenderer nxRightPants = this.rightPants;
-
     public ModelPlayerAnimated(float modelSize, boolean smallArmsIn) {
         super(modelSize, smallArmsIn);
         this.body = new ModelRendererMatrix(body);
@@ -34,11 +28,11 @@ public class ModelPlayerAnimated<T extends LivingEntity> extends PlayerModel<T> 
         this.leftLeg = new ModelRendererMatrix(leftLeg);
 
         this.hat = new ModelRendererMatrix(hat);
-        this.nxJacket = new ModelRendererMatrix(nxJacket);
-        this.nxLeftSleeve = new ModelRendererMatrix(nxLeftSleeve);
-        this.nxRightSleeve = new ModelRendererMatrix(nxRightSleeve);
-        this.nxLeftPants = new ModelRendererMatrix(nxLeftPants);
-        this.nxRightPants = new ModelRendererMatrix(nxRightPants);
+        this.jacket = new ModelRendererMatrix(jacket);
+        this.leftSleeve = new ModelRendererMatrix(leftSleeve);
+        this.rightSleeve = new ModelRendererMatrix(rightSleeve);
+        this.leftPants = new ModelRendererMatrix(leftPants);
+        this.rightPants = new ModelRendererMatrix(rightPants);
 
         if (smallArmsIn) {
             modelRenderers.add(leftArm);
@@ -58,11 +52,11 @@ public class ModelPlayerAnimated<T extends LivingEntity> extends PlayerModel<T> 
 
     @Override
     public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.nxLeftPants.copyFrom(this.leftLeg);
-        this.nxRightPants.copyFrom(this.rightLeg);
-        this.nxLeftSleeve.copyFrom(this.leftArm);
-        this.nxRightSleeve.copyFrom(this.rightArm);
-        this.nxJacket.copyFrom(this.body);
+        this.leftPants.copyFrom(this.leftLeg);
+        this.rightPants.copyFrom(this.rightLeg);
+        this.leftSleeve.copyFrom(this.leftArm);
+        this.rightSleeve.copyFrom(this.rightArm);
+        this.jacket.copyFrom(this.body);
         this.hat.copyFrom(this.head);
     }
 

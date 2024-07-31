@@ -8,6 +8,7 @@ displayName="${mod_name}"
 displayURL="https://github.com/nxkoo"
 authors="${mod_authors}"
 description='''${mod_description}'''
+credits="NykooX, BobMowzie"
 [[dependencies."${mod_id}"]]
    modId="forge"
    mandatory=true

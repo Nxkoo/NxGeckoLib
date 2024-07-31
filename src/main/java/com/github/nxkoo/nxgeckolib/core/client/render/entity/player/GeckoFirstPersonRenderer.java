@@ -3,6 +3,10 @@ package com.github.nxkoo.nxgeckolib.core.client.render.entity.player;
 import com.github.nxkoo.nxgeckolib.core.client.model.entity.ModelGeckoPlayerFirstPerson;
 import com.github.nxkoo.nxgeckolib.core.client.model.tools.geckolib.NxGeoBone;
 import com.github.nxkoo.nxgeckolib.core.client.render.NxRenderUtils;
+import com.github.nxkoo.nxgeckolib.core.server.ability.Ability;
+import com.github.nxkoo.nxgeckolib.core.server.ability.AbilityHandler;
+import com.github.nxkoo.nxgeckolib.core.server.ability.AbilitySection;
+import com.github.nxkoo.nxgeckolib.core.server.capability.AbilityCapability;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
@@ -37,8 +41,8 @@ public class GeckoFirstPersonRenderer extends FirstPersonRenderer implements IGe
 	public IRenderTypeBuffer rtb;
 	public static GeckoPlayer.GeckoPlayerFirstPerson GECKO_PLAYER_FIRST_PERSON;
 
-	private static HashMap<Class<? extends GeckoPlayer>, GeckoFirstPersonRenderer> modelsToLoad = new HashMap<>();
-	private ModelGeckoPlayerFirstPerson modelProvider;
+	private static final HashMap<Class<? extends GeckoPlayer>, GeckoFirstPersonRenderer> modelsToLoad = new HashMap<>();
+	private final ModelGeckoPlayerFirstPerson modelProvider;
 
 	boolean mirror;
 
@@ -83,7 +87,7 @@ public class GeckoFirstPersonRenderer extends FirstPersonRenderer implements IGe
 					partialTicks, rendertype, matrixStackIn, bufferIn, ivertexbuilder, combinedLightIn,
 					OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 		}
-/*
+
 		Ability.HandDisplay handDisplay = Ability.HandDisplay.DEFAULT;
 		float offHandEquipProgress = 0.0f;
 		AbilityCapability.IAbilityCapability abilityCapability = AbilityHandler.INSTANCE.getAbilityCapability(player);
@@ -115,10 +119,10 @@ public class GeckoFirstPersonRenderer extends FirstPersonRenderer implements IGe
 			MatrixStack newMatrixStack = new MatrixStack();
 
 			float fixedPitchController = 1f - this.modelProvider.getControllerValue("FixedPitchController" + sideName);
-			newMatrixStack.rotate(new Quaternion(Vector3f.XP, pitch * fixedPitchController, true));
+			NxRenderUtils.rotate(newMatrixStack, new Quaternion(Vector3f.XP, pitch * fixedPitchController, true));
 
-			newMatrixStack.getLast().getNormal().mul(bone.getWorldSpaceNormal());
-			newMatrixStack.getLast().getMatrix().mul(bone.getWorldSpaceXform());
+			newMatrixStack.last().normal().mul(bone.getWorldSpaceNormal());
+			newMatrixStack.last().pose().multiply(bone.getWorldSpaceXform());
 			newMatrixStack.translate(sideMult * 0.547, 0.7655, 0.625);
 
 			if (mirror)
@@ -126,13 +130,12 @@ public class GeckoFirstPersonRenderer extends FirstPersonRenderer implements IGe
 
 			if (stack.isEmpty() && !flag && handDisplay == Ability.HandDisplay.FORCE_RENDER && !player.isInvisible()) {
 				newMatrixStack.translate(0, -1 * offHandEquipProgress, 0);
-				super.renderArmFirstPerson(newMatrixStack, bufferIn, combinedLightIn, 0.0f, 0.0f, handside);
+				super.renderPlayerArm(newMatrixStack, bufferIn, combinedLightIn, 0.0f, 0.0f, handside);
 			} else {
-				super.renderItemInFirstPerson(player, partialTicks, pitch, handIn, 0.0f, stack, 0.0f, newMatrixStack,
+				super.renderArmWithItem(player, partialTicks, pitch, handIn, 0.0f, stack, 0.0f, newMatrixStack,
 						bufferIn, combinedLightIn);
 			}
 		}
- */ // todo: render item in first person.
 	}
 
 	public void setSmallArms() {

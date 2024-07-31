@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 public final class CapabilityHandler {
     public static void register() {
         CapabilityManager.INSTANCE.register(PlayerCapability.IPlayerCapability.class, new PlayerCapability.PlayerStorage(), PlayerCapability.PlayerCapabilityImp::new);
+        CapabilityManager.INSTANCE.register(AbilityCapability.IAbilityCapability.class, new AbilityCapability.AbilityStorage(), AbilityCapability.AbilityCapabilityImp::new);
     }
 
     @Nullable

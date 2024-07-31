@@ -5,20 +5,16 @@ import com.github.nxkoo.nxgeckolib.core.client.model.entity.ModelGeckoPlayerThir
 import com.github.nxkoo.nxgeckolib.core.client.render.entity.player.GeckoFirstPersonRenderer;
 import com.github.nxkoo.nxgeckolib.core.client.render.entity.player.GeckoPlayer;
 import com.github.nxkoo.nxgeckolib.core.client.render.entity.player.GeckoRenderPlayer;
+import com.github.nxkoo.nxgeckolib.core.server.ability.AbilityHandler;
+import com.github.nxkoo.nxgeckolib.core.server.capability.AbilityCapability;
 import com.github.nxkoo.nxgeckolib.core.server.capability.CapabilityHandler;
 import com.github.nxkoo.nxgeckolib.core.server.capability.PlayerCapability;
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
@@ -33,27 +29,33 @@ public enum ClientEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onHandRender(RenderHandEvent event) {
-        PlayerEntity player = Minecraft.getInstance().player;
+        AbstractClientPlayerEntity player = Minecraft.getInstance().player;
         if (player == null) return;
         boolean shouldAnimate = true;
 
-        PlayerCapability.IPlayerCapability playerCapability = CapabilityHandler.getCapability(player, PlayerCapability.PlayerProvider.PLAYER_CAPABILITY);
-        if (playerCapability != null) {
-            GeckoPlayer.GeckoPlayerFirstPerson geckoPlayer = GeckoFirstPersonRenderer.GECKO_PLAYER_FIRST_PERSON;
-            if (geckoPlayer != null) {
-                ModelGeckoPlayerFirstPerson geckoFirstPersonModel = (ModelGeckoPlayerFirstPerson) geckoPlayer.getModel();
-                GeckoFirstPersonRenderer firstPersonRenderer = (GeckoFirstPersonRenderer) geckoPlayer.getPlayerRenderer();
+        AbilityCapability.IAbilityCapability abilityCapability = AbilityHandler.INSTANCE.getAbilityCapability(player);
+        if (abilityCapability != null)
+            shouldAnimate = abilityCapability.getActiveAbility() != null;
 
-                if (geckoFirstPersonModel != null && firstPersonRenderer != null) {
-//                        if (!geckoFirstPersonModel.isUsingSmallArms() && ((AbstractClientPlayerEntity) player).getSkinType().equals("slim")) {
-                    firstPersonRenderer.setSmallArms();
-//                        }
-                    event.setCanceled(geckoFirstPersonModel.resourceForModelId((AbstractClientPlayerEntity) player));
+        if (shouldAnimate) {
+            PlayerCapability.IPlayerCapability playerCapability = CapabilityHandler.getCapability(player, PlayerCapability.PlayerProvider.PLAYER_CAPABILITY);
+            if (playerCapability != null) {
+                GeckoPlayer.GeckoPlayerFirstPerson geckoPlayer = GeckoFirstPersonRenderer.GECKO_PLAYER_FIRST_PERSON;
+                if (geckoPlayer != null) {
+                    ModelGeckoPlayerFirstPerson geckoFirstPersonModel = (ModelGeckoPlayerFirstPerson) geckoPlayer.getModel();
+                    GeckoFirstPersonRenderer firstPersonRenderer = (GeckoFirstPersonRenderer) geckoPlayer.getPlayerRenderer();
 
-                    if (event.isCanceled()) {
-                        float delta = event.getPartialTicks();
-                        float f1 = MathHelper.lerp(delta, player.xRotO, player.xRot);
-                        firstPersonRenderer.renderItemInFirstPerson((AbstractClientPlayerEntity) player, f1, delta, event.getHand(), event.getSwingProgress(), event.getItemStack(), event.getEquipProgress(), event.getMatrixStack(), event.getBuffers(), event.getLight(), geckoPlayer);
+                    if (geckoFirstPersonModel != null && firstPersonRenderer != null) {
+                        if (!geckoFirstPersonModel.isUsingSmallArms() && player.getModelName().equals("slim")) {
+                            firstPersonRenderer.setSmallArms();
+                        }
+                        event.setCanceled(geckoFirstPersonModel.resourceForModelId(player));
+
+                        if (event.isCanceled()) {
+                            float delta = event.getPartialTicks();
+                            float f1 = MathHelper.lerp(delta, player.xRotO, player.xRot);
+                            firstPersonRenderer.renderItemInFirstPerson(player, f1, delta, event.getHand(), event.getSwingProgress(), event.getItemStack(), event.getEquipProgress(), event.getMatrixStack(), event.getBuffers(), event.getLight(), geckoPlayer);
+                        }
                     }
                 }
             }
@@ -66,22 +68,26 @@ public enum ClientEventHandler {
             PlayerEntity player = (PlayerEntity) event.getEntity();
             if (player == null) return;
             float delta = event.getPartialRenderTick();
-            PlayerCapability.IPlayerCapability playerCapability = CapabilityHandler.getCapability(event.getEntity(), PlayerCapability.PlayerProvider.PLAYER_CAPABILITY);
-            if (playerCapability != null) {
-                GeckoPlayer.GeckoPlayerThirdPerson geckoPlayer = playerCapability.getGeckoPlayer();
-                if (geckoPlayer != null) {
-                    ModelGeckoPlayerThirdPerson geckoPlayerModel = (ModelGeckoPlayerThirdPerson) geckoPlayer.getModel();
-                    GeckoRenderPlayer animatedPlayerRenderer = (GeckoRenderPlayer) geckoPlayer.getPlayerRenderer();
+            AbilityCapability.IAbilityCapability abilityCapability = AbilityHandler.INSTANCE.getAbilityCapability(player);
 
-                    if (geckoPlayerModel != null && animatedPlayerRenderer != null) {
-//                        if (!geckoPlayerModel.isUsingSmallArms() && ((AbstractClientPlayerEntity) player).getModelName().equals("slim")) {
-                            animatedPlayerRenderer.setSmallArms();
-//                        }
+            if (abilityCapability != null && abilityCapability.getActiveAbility() != null) {
+                PlayerCapability.IPlayerCapability playerCapability = CapabilityHandler.getCapability(event.getEntity(), PlayerCapability.PlayerProvider.PLAYER_CAPABILITY);
+                if (playerCapability != null) {
+                    GeckoPlayer.GeckoPlayerThirdPerson geckoPlayer = playerCapability.getGeckoPlayer();
+                    if (geckoPlayer != null) {
+                        ModelGeckoPlayerThirdPerson geckoPlayerModel = (ModelGeckoPlayerThirdPerson) geckoPlayer.getModel();
+                        GeckoRenderPlayer animatedPlayerRenderer = (GeckoRenderPlayer) geckoPlayer.getPlayerRenderer();
 
-                        event.setCanceled(geckoPlayerModel.resourceForModelId((AbstractClientPlayerEntity) player));
+                        if (geckoPlayerModel != null && animatedPlayerRenderer != null) {
+                            if (!geckoPlayerModel.isUsingSmallArms() && ((AbstractClientPlayerEntity) player).getModelName().equals("slim")) {
+                                animatedPlayerRenderer.setSmallArms();
+                            }
 
-                        if (event.isCanceled()) {
-                            animatedPlayerRenderer.render((AbstractClientPlayerEntity) event.getEntity(), event.getEntity().yRot, delta, event.getMatrixStack(), event.getBuffers(), event.getLight(), geckoPlayer);
+                            event.setCanceled(geckoPlayerModel.resourceForModelId((AbstractClientPlayerEntity) player));
+
+                            if (event.isCanceled()) {
+                                animatedPlayerRenderer.render((AbstractClientPlayerEntity) event.getEntity(), event.getEntity().yRot, delta, event.getMatrixStack(), event.getBuffers(), event.getLight(), geckoPlayer);
+                            }
                         }
                     }
                 }
