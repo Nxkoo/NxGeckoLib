@@ -1,17 +1,24 @@
 package com.github.nxkoo.nxgeckolib;
 
+import com.github.nxkoo.nxgeckolib.core.client.model.tools.NxGeoBuilder;
+import com.github.nxkoo.nxgeckolib.core.server.capability.CapabilityHandler;
+import com.github.nxkoo.nxgeckolib.proxy.ClientProxy;
+import com.github.nxkoo.nxgeckolib.proxy.CommonProxy;
+import com.github.nxkoo.nxgeckolib.proxy.handlers.ServerEventHandler;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
+import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import software.bernie.example.GeckoLibMod;
+import software.bernie.geckolib3.GeckoLib;
 
 import java.util.stream.Collectors;
 
@@ -19,20 +26,36 @@ import java.util.stream.Collectors;
 public class NxGeckoLib {
 
     private static final Logger LOGGER = LogManager.getLogger();
-
     public static final String MODID = "nxgeckolib";
+    public static CommonProxy PROXY;
+
+    public static SimpleChannel NETWORK;
 
     public NxGeckoLib() {
+        GeckoLibMod.DISABLE_IN_DEV = true;
+        NxGeoBuilder.registerGeoBuilder(MODID, new NxGeoBuilder());
+        GeckoLib.initialize();
+
+        PROXY = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+        final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+
+
+        PROXY.init(bus);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new ServerEventHandler());
     }
 
     private void setup(final FMLCommonSetupEvent event) {
         LOGGER.info("NxGeckoLib is started...");
+        CapabilityHandler.register();
+        PROXY.initNetwork();
     }
+
 
     private void doClientStuff(final FMLClientSetupEvent event) {}
 

@@ -5,9 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "NxGeckoLib.refmap.json",
   "mixins": [],
-  "client": [
-    "TimerMixin"
-  ],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   }
