@@ -15,10 +15,12 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.stream.Collectors;
 
-@Mod("nxgeckolib")
+@Mod(NxGeckoLib.MODID)
 public class NxGeckoLib {
 
     private static final Logger LOGGER = LogManager.getLogger();
+
+    public static final String MODID = "nxgeckolib";
 
     public NxGeckoLib() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);

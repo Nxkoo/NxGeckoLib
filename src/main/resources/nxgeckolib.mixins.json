@@ -1,12 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.github.nxkoo.nxgeckolib.mixin",
+  "package": "com.github.nxkoo.nxgeckolib.mixins",
   "compatibilityLevel": "JAVA_8",
   "refmap": "NxGeckoLib.refmap.json",
-  "mixins": [
-  ],
+  "mixins": [],
   "client": [
+    "TimerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
